@@ -1,0 +1,15 @@
+# Core numerics (minimum versions with Python 3.13 wheels)
+numpy>=2.1
+pandas>=2.2.3
+scipy>=1.14.1        #
+
+# Plotting
+matplotlib>=3.9.2
+pymap3d
+cartopy
+
+# Optional - uncomment if your scripts use them
+h5py>=3.12          # HDF5 files
+netCDF4>=1.7.2      # NetCDF files
+xarray>=2024.10     # labelled multi-dimensional arrays
+tqdm>=4.66          # progress bars
