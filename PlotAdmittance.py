@@ -13,6 +13,10 @@ kappa(omega) = sum_l w_lk kappa_lk / sum_l w_lk,   l = k, k+2, ..., Lmax,   k = 
 """
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+from scipy.special import gammaln
+from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.lines import Line2D
 from utilities.utilities_timeFilt import transfer_function
 
 # ---------------- parameters ----------------
@@ -40,9 +44,23 @@ def kappa_lk(l, k):
     return k * (l + 2.0) / (k**2 + l + 1.0)
 
 
-def weight_lk(l, k, r=r, R=R):
+# ---------------- along-track power fractions ----------------
+def f_iso(l, k):
+    """Exact isotropic fraction (l-|k|)!/(l+|k|)! P_l^|k|(0)^2 for k = -l..l (sums to 1)."""
+    a = np.abs(k)
+    la, lb = (l + a) // 2, (l - a) // 2
+    lnP = gammaln(l + a + 1) - (la * np.log(2) + gammaln(la + 1)) - (lb * np.log(2) + gammaln(lb + 1))
+    out = np.exp(gammaln(l - a + 1) - gammaln(l + a + 1) + 2 * lnP)
+    return out
+
+def f_even(l, k):
+    """Even split: 1/(l+1) on the l+1 orders k = l, l-2, ..., -l."""
+    return np.where((l - np.abs(k)) % 2 == 0, 1.0 / (l + 1), 0.0)
+
+
+def weight_lk(l, k, r=r, R=R, flk_func=f_iso):
     """Expected along-track gravity-difference power <|delta g_y,lk|^2> (common constants dropped)."""
-    return (R / r) ** (2 * l) * (2 * l + 1.0) * sigma_kaula(l) ** 2 / (l + 1.0) * (k**2 + l + 1.0) ** 2
+    return (R / r) ** (2 * l) * (2 * l + 1.0) * sigma_kaula(l) ** 2 * flk_func(l, k) * (k**2 + l + 1.0) ** 2
 
 
 def kappa_eff(k, r=r):
@@ -59,11 +77,9 @@ def admittance(omega, kappa, r=r):
 def ghobadi_far(f_hz):
     return transfer_function(f_hz)
 
-import matplotlib as mpl
-from matplotlib.colors import ListedColormap, BoundaryNorm
-from matplotlib.lines import Line2D
 
 # ---------------- evaluation ----------------
+OUTDIR = "../RESULTS/AnalyticalRA_to_LGDs"
 f = np.linspace(f_min, f_max, 10000)                      # Hz
 omega = 2 * np.pi * f
 fm = f * 1e3                                              # mHz
@@ -130,7 +146,7 @@ cbar.set_label("Altitude $h$ [km]", fontsize=14)
 cbar.ax.tick_params(labelsize=13)
 
 plt.tight_layout()
-plt.savefig("admittance_kappa.png", dpi=200)
+plt.savefig(f"{OUTDIR}/admittance_kappa.png", dpi=200)
 
 # ---------------- table ----------------
 for h_km, (k, kappa_f, Z_rect, Z_freq) in results.items():

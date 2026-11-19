@@ -12,11 +12,12 @@ import matplotlib.pyplot as plt
 from scipy.special import gammaln
 
 # ---------------- constants ----------------
+OUTDIR = "../RESULTS/AnalyticalRA_to_LGDs"
 GM, R, J2 = 3.986004418e14, 6378137.0, 1.0826359e-3
 h, inc, ecc = 450e3, np.deg2rad(89.0), 0.002
 wE = 7.2921150e-5                      # Earth rotation [rad/s]
 Lmax = 200                             # (R/r)^(2l) makes higher degrees negligible
-df = 0.025e-3                          # frequency resolution [Hz]
+df = 0.0125e-3 * 3                          # frequency resolution [Hz]
 f_lo, f_hi = 0.1e-3, 20e-3
 f_rms_lo, f_rms_hi = 0.9e-3, 20e-3
 SHOW_J2E = False                       # J2 (Schweighart-Sedwick) + eccentricity curve
@@ -143,16 +144,16 @@ for name, Z, _ in curves:
 fm = f * 1e3
 fig, ax = plt.subplots(figsize=(12, 5.5))
 for name, Z, st in curves:
-    ax.plot(fm, Z, label=f"{name}  (RMS {rms(Z):.4f})", **st)
+    ax.plot(fm, Z, label=f"{name}  (RMSE = {rms(Z):.3f})", **st)
 m_gf = f >= 0.9e-3
 m_gf_l = (f >= 0.7e-3) & (f <= 0.9e-3)
 ax.plot(fm[m_gf], Z_gf[m_gf], color="C3", lw=2.2, label=r"Ghobadi-Far et al. (2018): $1+3.45\times10^{-4}f^{-1.04}$")
 ax.plot(fm[m_gf_l], Z_gf[m_gf_l], color="C3", lw=2.2, alpha=0.3)
 ax.axvspan(f_lo * 1e3, 0.9, color="0.93", zorder=0)
 ax.set_xscale("log")
-ax.set_xlim(f_lo * 1e3, f_hi * 1e3)
-ax.set_ylim(0.5, 2.5)
-ticks = [0.1, 0.2, 0.5, 0.9, 2, 5, 10, 20]
+ax.set_xlim(0.3*1e-3 * 1e3, f_hi * 1e3)
+ax.set_ylim(-1, 5)
+ticks = [0.3, 0.5, 0.9, 2, 5, 10, 20]
 ax.set_xticks(ticks)
 ax.set_xticklabels([f"{t:g}" for t in ticks])
 ax.set_xlabel("Frequency [mHz]", fontsize=14)
@@ -160,5 +161,5 @@ ax.set_ylabel(r"Admittance $Z(\omega)$ [-]", fontsize=14)
 ax.grid(True, which="both", alpha=0.3)
 ax.legend(fontsize=11, loc="upper right")
 plt.tight_layout()
-plt.savefig("admittance_models.png", dpi=200)
+plt.savefig(f"{OUTDIR}/admittance_models.png", dpi=200)
 plt.show()

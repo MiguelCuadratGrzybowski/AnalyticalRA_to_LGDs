@@ -29,21 +29,12 @@ fc = 0.36 *1e-3    # 0.9 mHz
 fc_low = 11.*1e-3
 sos = butter(N=4, fs=fs, btype='bandpass', output='sos', Wn = [fc, fc_low])
 
-
-# # retrieve for static
-# rho_static = data_static[:, 2]
-# rho_dot_static = data_static[:, 5]
-# xAB_norm = data_static[:, 6]
-# # mean motion from the static orbit: (|v_AB|^2 - rho_dot^2)/rho^2 ~ n^2
-# n_mean = np.sqrt(np.median((xAB_norm ** 2 - rho_dot_static ** 2) / rho_static ** 2))
-# n_static = np.sqrt((xAB_norm ** 2 - rho_dot_static ** 2) / rho_static ** 2)
-
 # Orbital frequency
 n_mean = 1.1170e-03  # rad/s
 f_cpr = n_mean / (2 * np.pi)
 # Welch segment
 nperseg_spec = int(2 ** np.ceil(np.log2(2 / f_cpr / dt)))
-nperseg_spec = int(4*nperseg_spec)
+nperseg_spec = int(2 * nperseg_spec)
 average_input_str = "median"
 print(f"n = {n_mean:.4e} rad/s  (1 cpr = {f_cpr * 1e3:.4f} mHz)")
 print(f"nperseg = {nperseg_spec} [-]")
@@ -66,8 +57,11 @@ lat_edges = np.arange(-90, 90 + GRID_RES, GRID_RES)
 lon_c = 0.5 * (lon_edges[:-1] + lon_edges[1:])
 lat_c = 0.5 * (lat_edges[:-1] + lat_edges[1:])
 
-OUTDIR_MAPS = "plots/maps"
-OUTDIR_SPEC = "plots/spectra"
+
+SCALE = 1.0          # set to 1e9 if the arrays are in m/s^2 rather than nm/s^2
+
+OUTDIR_MAPS = "../RESULTS/AnalyticalRA_to_LGDs/maps"
+OUTDIR_SPEC = "../RESULTS/AnalyticalRA_to_LGDs/spectra"
 
 
 def empirical_admittance(residual_rho_ddot, residual_lgd, dt, nperseg=nperseg_spec, window="hann", detrend="constant"):
@@ -130,7 +124,6 @@ def rmeds(x, scale=1.0):
     x = np.asarray(x, dtype=float) * scale
     return np.sqrt(np.nanmedian(x**2))
 
-SCALE = 1.0          # set to 1e9 if the arrays are in m/s^2 rather than nm/s^2
 def tag(x):
     return f" — RMedS = {rmeds(x, SCALE):.3f} nm/s²"
 
@@ -357,7 +350,7 @@ for filepath in sorted(glob.glob(f"{main_dir}/orbit_*_????_??.npy")):
            ylabel=r"Correlation spectrum $\gamma(f)$", xlabel="Frequency [mHz]")
     ax.grid(alpha=0.3, which="both")
     fig.tight_layout()
-    plt.show()
+    plt.close()
 
 
     # GF EXACT (empirical ratio from simulations).
@@ -415,7 +408,7 @@ for filepath in sorted(glob.glob(f"{main_dir}/orbit_*_????_??.npy")):
     ax.legend(fontsize=11, loc="upper right")
     plt.tight_layout()
     plt.savefig(os.path.join(OUTDIR_SPEC, f"admittance_{sol}_{year_month}.png"), dpi=200)
-    plt.show()
+    plt.close()
 
     # errors
     residual_gc = residual_lgd - residual_rho_ddot

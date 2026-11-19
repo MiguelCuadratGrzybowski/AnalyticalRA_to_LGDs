@@ -26,7 +26,7 @@ from scipy.signal import butter, bessel, cheby2, sosfiltfilt
 from scipy import ndimage
 
 # Import *all* original functions unchanged
-from Utility_functions_TimeFilt import (  # noqa: F401
+from .Utility_functions_TimeFilt import (  # noqa: F401
     get_time_pieces,
     interpolate_array_to_size,
     _robust_dt_from_x,
