@@ -6,7 +6,27 @@ import cmcrameri.cm as cmc
 from utilities.Utility_functions_TimeFilt_new import *   # transfer_function, compute_lgd_new, ...
 from utilities.Utility_functions_DIFF_TIME import derivative
 from utilities.Utility_analytical_equations import *
+from utilities.map_plotter import *                      # plot_cartopy_map, ccrs, ...
 
+# =============================================================================
+# Plotting
+# =============================================================================
+def plot_and_save(stat, lon_c, lat_c, vmin, vmax, cmap, label, title, fname, outdir="plots"):
+    """stat has shape (nlon, nlat)."""
+    Lon, Lat = np.meshgrid(lon_c, lat_c)
+    fig = plt.figure(figsize=(12, 6))
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    ax.set_global()
+    plot_cartopy_map(ax)
+    pc = ax.pcolormesh(Lon, Lat, stat.T, cmap=cmap, vmin=vmin, vmax=vmax,
+                       transform=ccrs.PlateCarree())
+    cbar = plt.colorbar(pc, orientation="horizontal", pad=0.05, fraction=0.05)
+    cbar.set_label(label, fontsize=13)
+    plt.title(title, fontsize=17)
+    outfile = os.path.join(outdir, fname)
+    plt.savefig(outfile, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved {outfile}")
 
 def plot_spectra(signals, errors, fs, nperseg, f_cpr, title, fname, outdir="plots"):
     """ASD of signals/estimates (top) and of errors (bottom)."""

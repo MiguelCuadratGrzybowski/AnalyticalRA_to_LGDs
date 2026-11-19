@@ -1,8 +1,6 @@
 from scipy.stats import binned_statistic_2d
 from scipy.signal import csd, welch, coherence, sosfiltfilt, butter
 import numpy as np
-from utilities.map_plotter import *                      # plot_cartopy_map, ccrs, ...
-import os
 
 # orbit
 n_mean = 1.1170e-03         # [rad/s]
@@ -166,28 +164,6 @@ def lgd_closure_spectrum(res_rho_ddot, dt, n, kappa="spherical", hilbert_sign=+1
     D = omega**2 - 2.0 * n * kappa * omega + 3.0 * n**2
     Z = (omega**2 - n**2) / D
     return Z * Rdd, freqs, Z
-
-
-# =============================================================================
-# Plotting
-# =============================================================================
-def plot_and_save(stat, lon_c, lat_c, vmin, vmax, cmap, label, title, fname, outdir="plots"):
-    """stat has shape (nlon, nlat)."""
-    Lon, Lat = np.meshgrid(lon_c, lat_c)
-    fig = plt.figure(figsize=(12, 6))
-    ax = plt.axes(projection=ccrs.PlateCarree())
-    ax.set_global()
-    plot_cartopy_map(ax)
-    pc = ax.pcolormesh(Lon, Lat, stat.T, cmap=cmap, vmin=vmin, vmax=vmax,
-                       transform=ccrs.PlateCarree())
-    cbar = plt.colorbar(pc, orientation="horizontal", pad=0.05, fraction=0.05)
-    cbar.set_label(label, fontsize=13)
-    plt.title(title, fontsize=17)
-    outfile = os.path.join(outdir, fname)
-    plt.savefig(outfile, dpi=200, bbox_inches="tight")
-    plt.close(fig)
-    print(f"Saved {outfile}")
-
 
 def asd(x, fs, nperseg):
     f, P = welch(x, fs=fs, nperseg=nperseg, window="hann", detrend="constant")
