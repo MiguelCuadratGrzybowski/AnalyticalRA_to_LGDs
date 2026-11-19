@@ -7,6 +7,7 @@ scipy>=1.14.1        #
 matplotlib>=3.9.2
 pymap3d
 cartopy
+cmcrameri
 
 # Optional - uncomment if your scripts use them
 h5py>=3.12          # HDF5 files

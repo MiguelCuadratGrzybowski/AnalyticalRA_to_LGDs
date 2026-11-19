@@ -13,6 +13,7 @@ kappa(omega) = sum_l w_lk kappa_lk / sum_l w_lk,   l = k, k+2, ..., Lmax,   k = 
 """
 import numpy as np
 import matplotlib.pyplot as plt
+import cmcrameri.cm as cmc
 import matplotlib as mpl
 from scipy.special import gammaln
 from matplotlib.colors import ListedColormap, BoundaryNorm
@@ -84,9 +85,10 @@ f = np.linspace(f_min, f_max, 10000)                      # Hz
 omega = 2 * np.pi * f
 fm = f * 1e3                                              # mHz
 
-heights_km = np.array([300, 350, 400, 450, 500, 550])
+heights_km = np.arange(250, 550+25, 25)
+cm_ = cmc.imola
 # discrete colormap: viridis truncated before the pale yellow end (stays visible on white / grey band, distinct from red GF curve)
-cmap = ListedColormap(plt.get_cmap("viridis")(np.linspace(0.0, 0.85, len(heights_km))))
+cmap = ListedColormap(cm_(np.linspace(0.0, 0.85, len(heights_km))))
 dh = np.diff(heights_km).mean() / 2
 bounds = np.r_[heights_km - dh, heights_km[-1] + dh]
 norm = BoundaryNorm(bounds, cmap.N)
