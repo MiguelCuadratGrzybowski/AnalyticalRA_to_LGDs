@@ -148,6 +148,7 @@ store = defaultdict(lambda: {"time": [], "grids": defaultdict(list),
 for filepath in sorted(glob.glob(f"{main_dir}/orbit_*_????_??.npy")):
     fname = os.path.basename(filepath)
     _, sol, yyyy, mm = fname.replace(".npy", "").split("_")
+
     year_month = f"{yyyy}_{mm}"
     t_month = pd.Timestamp(year=int(yyyy), month=int(mm), day=15)  # mid-month stamp
 

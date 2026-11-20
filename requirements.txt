@@ -14,3 +14,6 @@ h5py>=3.12          # HDF5 files
 netCDF4>=1.7.2      # NetCDF files
 xarray>=2024.10     # labelled multi-dimensional arrays
 tqdm>=4.66          # progress bars
+
+requests
+pyarrow
