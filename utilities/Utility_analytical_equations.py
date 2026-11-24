@@ -17,6 +17,17 @@ NM = 1e9                    # m/s^2 -> nm/s^2 (applied after filtering)
 F_CROSS_LO = 0.9e-3         # [Hz]
 F_CROSS_HI = 0.95e-3        # [Hz]
 
+# --------------------------------------------------------------------------
+# Constants
+# --------------------------------------------------------------------------
+GM_EARTH = 3.986004415e14       # m^3/s^2   (GRACE / EGM2008 convention)
+R_EARTH = 6378136.3             # m
+G_NEWTON = 6.67430e-11          # m^3/(kg s^2), CODATA 2018
+RHO_WATER = 1000.0              # kg/m^3
+# GRS80 ellipsoid (geodetic -> ECEF). WGS84 differs by < 0.1 mm in this use.
+GRS80_A = 6378137.0
+GRS80_F = 1.0 / 298.257222101
+
 # CW closure
 KAPPA = "spherical"         # or a float, e.g. 1.0
 HILBERT_SIGN = 1            # flip to -1 if overlap band (~0.9-1.5 mHz) disagrees with TF

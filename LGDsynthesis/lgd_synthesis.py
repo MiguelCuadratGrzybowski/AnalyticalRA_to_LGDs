@@ -70,10 +70,14 @@ import math
 import os
 import re
 import sys
+import traceback
 import time
 import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
+import calendar
+from datetime import date, timedelta
+import matplotlib.pyplot as plt
 
 import numpy as np
 import pandas as pd
@@ -165,6 +169,69 @@ class SHCoefficients:
     def __add__(self, other: "SHCoefficients") -> "SHCoefficients":
         neg = other.copy(); neg.C, neg.S = -other.C, -other.S
         return self - neg
+
+
+def _doy_to_date(year, doy):
+    return date(int(year), 1, 1) + timedelta(days=int(doy) - 1)
+
+
+def find_monthly_solution(directory, year, month, min_overlap_days=1, verbose=True):
+    """
+    Return the Path of the GSM-2 .gfc file in `directory` that best matches
+    the given calendar month.
+
+    1. First guess: GSM-2_{YYYY}{DOY_first}-{YYYY}{DOY_last}_*.gfc
+       (any mission / centre / release; the highest release wins if several match).
+    2. Otherwise: scan all GSM-2 files and pick the one with the largest
+       overlap (in days) with the month; ties are broken by the smallest
+       distance between the midpoints of the two intervals.
+    """
+    directory = Path(directory)
+    year, month = int(year), int(month)
+
+    m_start = date(year, month, 1)
+    m_end = date(year, month, calendar.monthrange(year, month)[1])
+    d0 = m_start.timetuple().tm_yday
+    d1 = m_end.timetuple().tm_yday
+
+    # --- 1. First guess: exact calendar-month file ---------------------------
+    guess_pattern = f"GSM-2_{year}{d0:03d}-{year}{d1:03d}_*.gfc"
+    exact = sorted(directory.glob(guess_pattern))
+    if exact:
+        best = max(exact, key=lambda p: p.stem[-4:])  # highest release number
+        if verbose:
+            print(f"[find_monthly_solution] exact match: {best.name}")
+        return best
+
+    # --- 2. Best fit over all files ------------------------------------------
+    m_mid = m_start + (m_end - m_start) / 2
+    candidates = []
+    for p in directory.glob("GSM-2_*.gfc"):
+        mt = _GSM_RE.match(p.name)
+        if not mt:
+            continue
+        y0, doy0, y1, doy1, *_ , release = mt.groups()
+        f_start, f_end = _doy_to_date(y0, doy0), _doy_to_date(y1, doy1)
+        overlap = (min(f_end, m_end) - max(f_start, m_start)).days + 1
+        f_mid = f_start + (f_end - f_start) / 2
+        candidates.append((overlap, -abs((f_mid - m_mid).days), release, p, f_start, f_end))
+
+    if not candidates:
+        raise FileNotFoundError(f"No GSM-2 .gfc files found in {directory.resolve()}")
+
+    overlap, _, _, best, f_start, f_end = max(candidates, key=lambda c: c[:3])
+
+    if overlap < min_overlap_days:
+        raise FileNotFoundError(
+            f"No solution overlaps {year}-{month:02d} by >= {min_overlap_days} day(s) "
+            f"(first guess was {guess_pattern}); closest is {best.name} "
+            f"({f_start} to {f_end}). This month may be missing (GRACE gap)."
+        )
+
+    if verbose:
+        print(f"[find_monthly_solution] no exact '{guess_pattern}'; "
+              f"best fit: {best.name} ({f_start} to {f_end}, {overlap} days overlap)")
+    return best
 
 
 def _to_float(token: str) -> float:
@@ -360,9 +427,9 @@ def read_orbit_parquet(path: str, sat: str | None = None) -> pd.DataFrame:
     return prepare_orbit(pd.read_parquet(path), sat)
 
 
-def merge_orbits(orb_c: pd.DataFrame, orb_d: pd.DataFrame) -> pd.DataFrame:
+def merge_orbits(orb_c: pd.DataFrame, orb_d: pd.DataFrame, suffixes=("_A", "_B")) -> pd.DataFrame:
     """Inner-join both satellites on gps_time; columns *_C and *_D."""
-    m = pd.merge(orb_c, orb_d, on="gps_time", suffixes=("_C", "_D"), how="inner")
+    m = pd.merge(orb_c, orb_d, on="gps_time", suffixes=suffixes, how="inner")
     dropped = max(len(orb_c), len(orb_d)) - len(m)
     if len(m) == 0:
         raise ValueError("The two orbit files have no common gps_time epochs")
@@ -633,7 +700,7 @@ def compute_lgd(sh: SHCoefficients, orbit_c: pd.DataFrame, orbit_d: pd.DataFrame
                 lmin: int = 0, lmax: int | None = None, gm: float | None = None,
                 radius: float | None = None, position_type: str = "geodetic",
                 reference_radius: float = R_EARTH, chunk: int = 1024,
-                engine: str = "auto") -> pd.DataFrame:
+                engine: str = "auto", suffixes=("_C", "_D")) -> pd.DataFrame:
     """Line-of-sight gravity difference between GRACE-FO C and D.
 
     Parameters
@@ -662,9 +729,9 @@ def compute_lgd(sh: SHCoefficients, orbit_c: pd.DataFrame, orbit_d: pd.DataFrame
     if sh.C.shape[0] > 0 and lmin == 0 and abs(sh.C[0, 0]) > 0.5:
         warnings.warn("C00 ~ 1 is included (lmin=0): the LGD contains the central-field term")
 
-    m = merge_orbits(orbit_c, orbit_d)
-    r_c = orbit_to_ecef(m.lat_C, m.lon_C, m.alt_C, position_type, reference_radius)
-    r_d = orbit_to_ecef(m.lat_D, m.lon_D, m.alt_D, position_type, reference_radius)
+    m = merge_orbits(orbit_c, orbit_d, suffixes=suffixes)
+    r_c = orbit_to_ecef(m[f"lat{suffixes[0]}"], m[f"lon{suffixes[0]}"], m[f"alt{suffixes[0]}"], position_type, reference_radius)
+    r_d = orbit_to_ecef(m[f"lat{suffixes[1]}"], m[f"lon{suffixes[1]}"], m[f"alt{suffixes[1]}"], position_type, reference_radius)
 
     mid_lat, mid_lon, mid_alt = ecef_to_geodetic(0.5 * (r_c + r_d))
 
@@ -689,7 +756,7 @@ def run(coef, orbit_c, orbit_d, output=None, *,
         lmin=0, lmax=None, gm=None, radius=None,
         reference=None, units="stokes", love=None, love_first_degree=0,
         position_type="geodetic", reference_radius=R_EARTH,
-        engine="auto", save=True, verbose=True):
+        engine="auto", save=True, verbose=True, suffixes=("_C", "_D")):
     """Synthesise LGDs and return them as a DataFrame.
 
     You can call this from the PyCharm Python console, e.g.
@@ -726,8 +793,8 @@ def run(coef, orbit_c, orbit_d, output=None, *,
                                     gm=gm, radius=radius)
 
     log(f"Reading orbits: {orbit_c}, {orbit_d}")
-    orb_c = read_orbit_parquet(orbit_c, "C")
-    orb_d = read_orbit_parquet(orbit_d, "D")
+    orb_c = read_orbit_parquet(orbit_c, suffixes[0].replace("_", ""))
+    orb_d = read_orbit_parquet(orbit_d, suffixes[1].replace("_", ""))
 
     eng = ("numba" if HAVE_NUMBA else "numpy") if engine == "auto" else engine
     log(f"Computing LGD for {min(len(orb_c), len(orb_d))} epochs "
@@ -735,7 +802,7 @@ def run(coef, orbit_c, orbit_d, output=None, *,
     t1 = time.perf_counter()
     out = compute_lgd(sh, orb_c, orb_d, lmin=lmin, lmax=lmax, gm=gm, radius=radius,
                       position_type=position_type, reference_radius=reference_radius,
-                      engine=engine)
+                      engine=engine, suffixes=suffixes)
     log(f"  synthesis: {time.perf_counter() - t1:.1f} s")
 
     if save and output:
@@ -778,31 +845,126 @@ if __name__ == "__main__":
     # RUN SETTINGS: edit these and press Run (paths are relative to the
     # PyCharm working directory unless absolute)
     # ----------------------------------------------------------------------
-    DATA = Path(r"../../orbit_data")          # <- your data folder
-    DATA_SHC = Path(r"../../../solutions/CSR_CSR-Release-06_60x60_unfiltered")  # <- your data folder
-    MODEL_NAME = "GSM-2_2020001-2020031_GRFO_UTCSR_BA01_0603.gfc"
-    REF_path = "../../../Level3_EWH/models/GGM05C.gfc"
+    MONTH = "12"
+    YEAR = "2005"
+    DATA = Path(r"../../solutions/orbits")
+    RESULTS_DIR =  Path(r"../../RESULTS/AnalyticalRA_to_LGDs/synthesis")
+    REF_path = "../../Level3_EWH/models/GGM05C.gfc"
+    DATA_SHC = Path(r"../../solutions/CSR_CSR-Release-06_60x60_unfiltered")
 
-    SETTINGS = dict(
-        coef=DATA_SHC / MODEL_NAME,
-        orbit_c=DATA / "orbit_2020_01.parquet",
-        orbit_d=DATA / "orbit_2020_01.parquet",
-        output=DATA / "out" / "lgd_2020_01.parquet",  # .parquet or .csv
-        lmin=2,
-        lmax=60,
-        reference=REF_path,          # e.g. DATA / "mean_field.gfc"
-        units="stokes",          # "stokes", "ewh", "ewh_cm", "ewh_mm", "smd"
-        love=None,               # required if units != "stokes"
-        love_first_degree=0,
-        position_type="geodetic",
-        gm=None,                 # None = take from coefficient file
-        radius=None,
-        engine="auto",           # "auto" = numba if installed, else numpy
-        save=True,
+    # e.g. GSM-2_2007182-2007212_GRAC_UTCSR_BA01_0600.gfc
+    _GSM_RE = re.compile(
+        r"^GSM-2_(\d{4})(\d{3})-(\d{4})(\d{3})_([A-Z]{4})_([A-Z]+)_([A-Z0-9]+)_(\d{4})\.gfc$"
     )
-    # ----------------------------------------------------------------------
 
-    if len(sys.argv) > 1:        # arguments given -> use the terminal interface
+    OVERWRITE = False  # False = skip months whose output already exists
+    MIN_OVERLAP_DAYS = 2  # raise (e.g. 15) to reject partial-month solutions
+
+    _ORBIT_RE = re.compile(r"^orbit_(\d{4})_(\d{2})\.parquet$")
+
+    # MODEL_PATH = find_monthly_solution(DATA_SHC, YEAR, MONTH)
+    # MODEL_NAME = MODEL_PATH.name
+
+    # SETTINGS = dict(
+    #     coef=DATA_SHC / MODEL_NAME,
+    #     orbit_c=DATA / f"orbit_circular.parquet",
+    #     orbit_d=DATA / f"orbit_circular.parquet",
+    #     output=RESULTS_DIR / f"lgd_{YEAR}_{MONTH}_circular.parquet",  # .parquet or .csv
+    #     lmin=2,
+    #     lmax=60,
+    #     reference=REF_path,          # e.g. DATA / "mean_field.gfc"
+    #     units="stokes",         # "stokes", "ewh", "ewh_cm", "ewh_mm", "smd"
+    #     love=None,               # required if units != "stokes"
+    #     love_first_degree=0,
+    #     position_type="geodetic",
+    #     gm=None,                 # None = take from coefficient file
+    #     radius=None,
+    #     engine="auto",           # "auto" = numba if installed, else numpy
+    #     save=True,
+    #     suffixes=("_A", "_B") if int(YEAR) <= 2017 else ("_C", "_D")
+    # )
+    # # ----------------------------------------------------------------------
+    #
+    # if len(sys.argv) > 1:        # arguments given -> use the terminal interface
+    #     out = main()
+    # else:                        # pressed Run in PyCharm -> use SETTINGS
+    #     out = run(**SETTINGS)
+
+
+    def make_settings(year, month, model_path):
+        return dict(
+            coef=model_path,
+            orbit_c=DATA / f"orbit_{year}_{month}.parquet",
+            orbit_d=DATA / f"orbit_{year}_{month}.parquet",
+            output=RESULTS_DIR / f"lgd_{year}_{month}.parquet",  # .parquet or .csv
+            lmin=2,
+            lmax=60,
+            reference=REF_path,
+            units="stokes",  # "stokes", "ewh", "ewh_cm", "ewh_mm", "smd"
+            love=None,  # required if units != "stokes"
+            love_first_degree=0,
+            position_type="geodetic",
+            gm=None,  # None = take from coefficient file
+            radius=None,
+            engine="auto",  # "auto" = numba if installed, else numpy
+            save=True,
+            suffixes=("_A", "_B") if int(year) <= 2017 else ("_C", "_D"),
+        )
+
+
+    def run_all():
+        RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+        orbit_files = sorted(
+            (m.group(1), m.group(2), p)
+            for p in DATA.glob("orbit_*_*.parquet")
+            if (m := _ORBIT_RE.match(p.name))
+        )
+        if not orbit_files:
+            raise FileNotFoundError(f"No orbit_YYYY_MM.parquet files in {DATA.resolve()}")
+
+        print(f"Found {len(orbit_files)} orbit files in {DATA.resolve()}")
+        done, skipped, failed = [], [], []
+        outputs = {}
+
+        for year, month, orbit_path in orbit_files:
+            tag = f"{year}-{month}"
+            out_path = RESULTS_DIR / f"lgd_{year}_{month}.parquet"
+
+            if out_path.exists() and not OVERWRITE:
+                print(f"[{tag}] output exists, skipping ({out_path.name})")
+                skipped.append((tag, "output exists"))
+                continue
+
+            try:
+                model_path = find_monthly_solution(
+                    DATA_SHC, year, month, min_overlap_days=MIN_OVERLAP_DAYS
+                )
+            except FileNotFoundError as e:
+                print(f"[{tag}] no L2 solution: {e}")
+                skipped.append((tag, "no L2 solution"))
+                continue
+
+            print(f"[{tag}] {orbit_path.name}  <->  {model_path.name}")
+            try:
+                outputs[tag] = run(**make_settings(year, month, model_path))
+                done.append(tag)
+            except Exception:
+                print(f"[{tag}] FAILED")
+                traceback.print_exc()
+                failed.append(tag)
+
+        # --- summary ---------------------------------------------------------
+        print("\n" + "=" * 60)
+        print(f"done:    {len(done)}")
+        print(f"skipped: {len(skipped)}  " + ", ".join(f"{t} ({r})" for t, r in skipped))
+        print(f"failed:  {len(failed)}  " + ", ".join(failed))
+        return outputs
+
+
+    # ----------------------------------------------------------------------
+    if len(sys.argv) > 1:  # arguments given -> use the terminal interface
         out = main()
-    else:                        # pressed Run in PyCharm -> use SETTINGS
-        out = run(**SETTINGS)
+    else:  # pressed Run in PyCharm -> loop over all months
+        out = run_all()
+

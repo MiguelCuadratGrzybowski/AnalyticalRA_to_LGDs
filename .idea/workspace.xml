@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdb73121-d78a-4dad-9b76-ade65e0004d7" name="Changes" comment="5th commit">
-      <change afterPath="$PROJECT_DIR$/LGDsynthesis/lgd_synthesis.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LGDsynthesis/loadLoveNumbers_Gegout97.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LGDsynthesis/plot.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LGDsynthesis/test_lgd.py" afterDir="false" />
+    <list default="true" id="cdb73121-d78a-4dad-9b76-ade65e0004d7" name="Changes" comment="6th commit">
+      <change afterPath="$PROJECT_DIR$/Apply_to_real_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/orbit_related/make_circular_orbit.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utilities/plotters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ApplyTF_RA_LGD.py" beforeDir="false" afterPath="$PROJECT_DIR$/ApplyTF_RA_LGD.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LGDsynthesis/lgd_synthesis.py" beforeDir="false" afterPath="$PROJECT_DIR$/LGDsynthesis/lgd_synthesis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LGDsynthesis/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/LGDsynthesis/plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/Utility_analytical_equations.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/Utility_analytical_equations.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,9 +54,16 @@
   "keyToString": {
     "Notification.DisplayName-DoNotAsk-Python Compatibility Inspection Advertiser": "Python compatibility inspection recommended",
     "Notification.DoNotAsk-Python Compatibility Inspection Advertiser": "true",
+    "Python tests.Doctests in lgd_synthesis (1).executor": "Run",
+    "Python tests.Doctests in lgd_synthesis (2).executor": "Run",
+    "Python tests.Doctests in lgd_synthesis.executor": "Run",
     "Python.AnalyticalPowerLaw.executor": "Run",
     "Python.ApplyTF_RA_LGD (1).executor": "Run",
+    "Python.Apply_to_real_data.executor": "Run",
     "Python.PlotAdmittance.executor": "Run",
+    "Python.lgd_synthesis.executor": "Run",
+    "Python.make_circular_orbit.executor": "Run",
+    "Python.plot.executor": "Run",
     "Python.synthResLGDsaver.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -73,14 +81,15 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\michalcuadratg\PycharmProjects\AnalyticalRA_to_LGDs\LGDsynthesis" />
       <recent name="C:\Users\michalcuadratg\PycharmProjects\AnalyticalRA_to_LGDs" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\michalcuadratg\PycharmProjects\AnalyticalRA_to_LGDs\utilities" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.ApplyTF_RA_LGD (1)">
-    <configuration name="AnalyticalPowerLaw" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.lgd_synthesis">
+    <configuration name="Apply_to_real_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AnalyticalRA_to_LGDs" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -94,7 +103,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/AnalyticalPowerLaw.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Apply_to_real_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -103,7 +112,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="ApplyTF_RA_LGD (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="lgd_synthesis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AnalyticalRA_to_LGDs" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -112,12 +121,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/LGDsynthesis" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ApplyTF_RA_LGD.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LGDsynthesis/lgd_synthesis.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -126,7 +135,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="ApplyTF_RA_LGD" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="make_circular_orbit" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AnalyticalRA_to_LGDs" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -135,12 +144,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/orbit_related" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="C:\Users\michalcuadratg\PycharmProjects\AnalyticalRA_to_LGDs\ApplyTF_RA_LGD.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/orbit_related/make_circular_orbit.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -149,7 +158,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="investigateAltitudeEffects" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="plot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AnalyticalRA_to_LGDs" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -158,26 +167,47 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/LGDsynthesis" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="C:\Users\michalcuadratg\PycharmProjects\AnalyticalRA_to_LGDs\investigateAltitudeEffects.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LGDsynthesis/plot.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Doctests in lgd_synthesis (2)" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
+      <module name="AnalyticalRA_to_LGDs" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/LGDsynthesis" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LGDsynthesis/lgd_synthesis.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.ApplyTF_RA_LGD (1)" />
-        <item itemvalue="Python.investigateAltitudeEffects" />
-        <item itemvalue="Python.AnalyticalPowerLaw" />
-        <item itemvalue="Python.ApplyTF_RA_LGD" />
+        <item itemvalue="Python.lgd_synthesis" />
+        <item itemvalue="Python.Apply_to_real_data" />
+        <item itemvalue="Python.plot" />
+        <item itemvalue="Python.make_circular_orbit" />
+        <item itemvalue="Python tests.Doctests in lgd_synthesis (2)" />
       </list>
     </recent_temporary>
   </component>
@@ -201,7 +231,8 @@
       <workItem from="1795016125329" duration="4325000" />
       <workItem from="1795121544301" duration="21000" />
       <workItem from="1795121638029" duration="4470000" />
-      <workItem from="1795131892920" duration="9584000" />
+      <workItem from="1795131892920" duration="10319000" />
+      <workItem from="1795517463220" duration="17993000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -251,7 +282,15 @@
       <option name="project" value="LOCAL" />
       <updated>1795125534043</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="6th commit">
+      <option name="closed" value="true" />
+      <created>1795203701263</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1795203701265</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -262,11 +301,19 @@
     <MESSAGE value="2nd commit" />
     <MESSAGE value="4th commit" />
     <MESSAGE value="5th commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="5th commit" />
+    <MESSAGE value="6th commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="6th commit" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$Apply_to_real_data.coverage" NAME="Apply_to_real_data Coverage Results" MODIFIED="1795535985585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$ApplyTF_RA_LGD__1_.coverage" NAME="ApplyTF_RA_LGD (1) Coverage Results" MODIFIED="1795167533815" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$plot.coverage" NAME="plot Coverage Results" MODIFIED="1795521945422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$Doctests_in_lgd_synthesis__1_.coverage" NAME="Doctests in lgd_synthesis (1) Coverage Results" MODIFIED="1795518473512" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$PlotAdmittance.coverage" NAME="PlotAdmittance Coverage Results" MODIFIED="1795122220669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$Doctests_in_lgd_synthesis.coverage" NAME="Doctests in lgd_synthesis Coverage Results" MODIFIED="1795518172642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$Doctests_in_lgd_synthesis__2_.coverage" NAME="Doctests in lgd_synthesis (2) Coverage Results" MODIFIED="1795519152789" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$lgd_synthesis.coverage" NAME="lgd_synthesis Coverage Results" MODIFIED="1795548308649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$make_circular_orbit.coverage" NAME="make_circular_orbit Coverage Results" MODIFIED="1795521839116" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/orbit_related" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$synthResLGDsaver.coverage" NAME="synthResLGDsaver Coverage Results" MODIFIED="1795016685970" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$AnalyticalPowerLaw.coverage" NAME="AnalyticalPowerLaw Coverage Results" MODIFIED="1795079704332" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

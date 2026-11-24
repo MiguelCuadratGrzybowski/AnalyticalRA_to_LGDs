@@ -101,13 +101,15 @@ if __name__ == "__main__":
     # RUN SETTINGS
     # ----------------------------------------------------------------------
     SETTINGS = dict(
-        lgd_file=Path("../orbit_data/out/lgd_2020_01.parquet"),   # INPUT: LGD file
+        lgd_file=Path("../../RESULTS/AnalyticalRA_to_LGDs/synthesis/lgd_2005_12_circular.parquet"),   # INPUT: LGD file
         dlat=2.0,            # grid cell size in latitude [deg]
         dlon=2.0,            # grid cell size in longitude [deg]
         min_count=3,         # cells with fewer points are left empty
-        clim=(-15, 15),           # e.g. (-20, 20) nm/s^2; None = automatic
+        # clim=(-15, 15),           # e.g. (-20, 20) nm/s^2; None = automatic
+        clim=(-20, 20),  # e.g. (-20, 20) nm/s^2; None = automatic
         point_size=1.0,      # scatter marker size
         save=None,           # e.g. "lgd_2020_01.png"
+        cmap="seismic"
     )
     # ----------------------------------------------------------------------
     lat_edges, lon_edges, grid, count = plot_lgd(**SETTINGS)
