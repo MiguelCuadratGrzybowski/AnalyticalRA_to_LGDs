@@ -109,7 +109,7 @@ OUTLIER_K        = 5.0         # reject |res| > K * 1.4826 * MAD
 OUTLIER_MAX_ITER = 3
 
 # Welch segment
-nperseg_spec = 4 * int(2 ** np.ceil(np.log2(2 / 0.1760e-3 / dt)))
+nperseg_spec = 1 * int(2 ** np.ceil(np.log2(2 / 0.1760e-3 / dt)))
 average_input_str = "median"
 print(f"nperseg = {nperseg_spec} [-]")
 
