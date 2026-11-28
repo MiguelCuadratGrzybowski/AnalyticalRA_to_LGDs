@@ -317,13 +317,20 @@ def plot_netcdf(
 
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
+    # path = Path(r"..\RESULTS\AnalyticalRA_to_LGDs\netcdf\lgd_residuals_CSR.nc")
+    # ds_ = xr.open_dataset(path)
+    # ds_["diff_eps"] = np.abs(ds_["eps_approx"]) - np.abs(ds_["eps_TF"])
+    # ds_["diff_eps_ext"] = np.abs(ds_["eps_approx"]) - np.abs(ds_["eps_TF_exact"])
+    # # all variables, all metrics
+    # plot_netcdf(ds_, save_dir=r"..\RESULTS\AnalyticalRA_to_LGDs\netcdf\plots", show=False,time_range=("2005-01-01", "2010-12-31"))
+    #
     path = Path(r"..\RESULTS\AnalyticalRA_to_LGDs\geofitData\netcdf\lgd_residuals_CSR_RL06_real.nc")
     ds_ = xr.open_dataset(path)
     ds_["diff_eps"] = np.abs(ds_["eps_approx"]) - np.abs(ds_["eps_TF_freq"])
     ds_["diff_eps_ext"] = np.abs(ds_["eps_approx"]) - np.abs(ds_["eps_TF"])
-
     # all variables, all metrics
-    plot_netcdf(ds_, save_dir=r"..\RESULTS\AnalyticalRA_to_LGDs\geofitData\netcdf\plots", show=False)
+    plot_netcdf(ds_, save_dir=r"..\RESULTS\AnalyticalRA_to_LGDs\geofitData\netcdf\plots", show=False,
+                time_range=("2005-01-01", "2010-12-31"))
 
     # only some variables / metrics, one year:
     # plot_netcdf(ds_, variables=["eps_TF_freq", "eps_approx", "diff_eps"],
