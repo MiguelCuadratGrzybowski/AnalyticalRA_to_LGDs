@@ -17,7 +17,7 @@ data_static = np.load(f"{main_dir}/orbit_ggm05c.npy")
 # sampling / filtering
 dt = 5.0                    # [s]
 fs = 1.0 / dt               # [Hz]
-fc = 0.36e-3                # [Hz] high-pass edge
+fc = 0.4e-3                # [Hz] high-pass edge
 fc_low = 11.0e-3            # [Hz] low-pass edge
 sos = butter(N=4, Wn=[fc, fc_low], btype="bandpass", fs=fs, output="sos")
 

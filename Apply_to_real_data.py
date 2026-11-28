@@ -21,7 +21,7 @@ fs = 1.0 / dt               # [Hz]
 fc = 0.4e-3                 # [Hz] high-pass edge
 fc_low = 11.0e-3            # [Hz] low-pass edge
 sos = butter(N=4, Wn=[fc, fc_low], btype="bandpass", fs=fs, output="sos")
-sos_low = butter(N=4, Wn=fc_low, btype="lowpass", fs=fs, output="sos")
+sos_GF = butter(N=4, Wn=[0.9e-3, fc_low], btype="bandpass", fs=fs, output="sos")
 
 # Inputs
 inputs = {
@@ -61,8 +61,9 @@ FIELD_META = {
     "res_rhoddot":      (-15, 15, r"$\delta \ddot{\rho}$"),
     "res_LGD_tf":       (-15, 15, r"$(\delta g^{\rm LoS}_{\rm AB})_{\rm TF-fit}$ (res. LGD estimate)"),
     "res_LGD_approx":   (-15, 15, r"$(\delta g^{\rm LoS}_{\rm AB})_{\rm TF-CW}$ (res. LGD estimate)"),
-    "eps_TF":           (-1, 1,   r"$\epsilon_{\rm TF-fit}$ (transfer function error)"),
-    "eps_approx":       (-1, 1,   r"$\epsilon_{\rm TF-CW}$"),
+    "eps_TF":           (-5, 5,   r"$\epsilon_{\rm TF-GF_{\rm ext}}$ (transfer function error)"),
+    "eps_TF_freq": (-5, 5, r"$\epsilon_{\rm TF-GF}$ (transfer function error)"),
+    "eps_approx":       (-5, 5,   r"$\epsilon_{\rm TF-CW}$"),
     "res_gc":           (-5, 5,   r"$\delta g_c$ (res. centrifugal acceleration)"),
 }
 
@@ -109,7 +110,7 @@ OUTLIER_K        = 5.0         # reject |res| > K * 1.4826 * MAD
 OUTLIER_MAX_ITER = 3
 
 # Welch segment
-nperseg_spec = 1 * int(2 ** np.ceil(np.log2(2 / 0.1760e-3 / dt)))
+nperseg_spec = 2 * int(2 ** np.ceil(np.log2(2 / 0.1760e-3 / dt)))
 average_input_str = "median"
 print(f"nperseg = {nperseg_spec} [-]")
 
@@ -414,7 +415,7 @@ for rr_path in sorted(glob.glob(os.path.join(main_dir, "rr_????_??_??.parquet"))
           else f"  no arc >= nperseg ({nperseg_spec * dt / 3600:.1f} h): no GF admittance")
 
     # ------------------------------------------------------------ per arc: TF methods + filtering
-    keys = ["res_LGD", "res_rhoddot", "res_LGD_approx", "res_LGD_tf"]
+    keys = ["res_LGD", "res_rhoddot", "res_LGD_approx", "res_LGD_tf",  "res_LGD_tf_freq"]
     month = defaultdict(list)      # good samples of all arcs (for maps / RMS)
     n_trim = int(round(EDGE_TRIM_SEC / dt))
     longest = max(range(len(arcs)), key=lambda k: len(arcs[k][0]))
@@ -440,6 +441,7 @@ for rr_path in sorted(glob.glob(os.path.join(main_dir, "rr_????_??_??.parquet"))
 
         # GF fit
         lgd_TF = compute_lgd_new(rho_ddot)
+        lgd_TF_freq = compute_lgd_new(rho_ddot)
 
         if DEBUG_PLOTS and k == longest:
             plt.plot(rho_ddot, label=r"$\delta\ddot\rho$")
@@ -452,6 +454,7 @@ for rr_path in sorted(glob.glob(os.path.join(main_dir, "rr_????_??_??.parquet"))
             "res_rhoddot":    sosfiltfilt(sos, rho_ddot) * NM,
             "res_LGD_approx": sosfiltfilt(sos, lgd_newTF) * NM,
             "res_LGD_tf":     sosfiltfilt(sos, lgd_TF) * NM,
+            "res_LGD_tf_freq": sosfiltfilt(sos_GF, lgd_TF) * NM,
         }
 
         # keep the longest arc continuous (incl. interpolated samples) for spectra / admittance plot
@@ -478,9 +481,11 @@ for rr_path in sorted(glob.glob(os.path.join(main_dir, "rr_????_??_??.parquet"))
     residual_rho_ddot = month["res_rhoddot"]
     residual_lgdnewTF = month["res_LGD_approx"]
     residual_lgdTF    = month["res_LGD_tf"]
+    residual_lgdTF_freq = month["res_LGD_tf_freq"]
 
     residual_gc = residual_lgd - residual_rho_ddot
     error_TF    = residual_lgd - residual_lgdTF
+    error_TF_freq = residual_lgd - residual_lgdTF_freq
     error_newTF = residual_lgd - residual_lgdnewTF
 
     series = {
@@ -489,6 +494,7 @@ for rr_path in sorted(glob.glob(os.path.join(main_dir, "rr_????_??_??.parquet"))
         "res_LGD_tf": residual_lgdTF,
         "res_LGD_approx": residual_lgdnewTF,
         "eps_TF": error_TF,
+        "eps_TF_freq": error_TF_freq,
         "eps_approx": error_newTF,
         "res_gc": residual_gc,
     }
@@ -506,6 +512,7 @@ for rr_path in sorted(glob.glob(os.path.join(main_dir, "rr_????_??_??.parquet"))
     s = spec_arc
     s_gc    = s["res_LGD"] - s["res_rhoddot"]
     s_TF    = s["res_LGD"] - s["res_LGD_tf"]
+    s_TF_freq = s["res_LGD"] - s["res_LGD_tf_freq"]
     s_newTF = s["res_LGD"] - s["res_LGD_approx"]
 
     signals = {
@@ -513,16 +520,21 @@ for rr_path in sorted(glob.glob(os.path.join(main_dir, "rr_????_??_??.parquet"))
             (s["res_LGD"], dict(color="k", lw=1.6)),
         r"$\delta\ddot\rho$" + tag(residual_rho_ddot):
             (s["res_rhoddot"], dict(color="0.55", lw=1.0)),
-        r"TF (Ghobadi-Far Z(f) fit)" + tag(residual_lgdTF):
-            (s["res_LGD_tf"], dict(color="tab:blue", lw=1.1)),
+
         r"Analytical TF (TF-CW)" + tag(residual_lgdnewTF):
             (s["res_LGD_approx"], dict(color="tab:green", lw=1.0, ls="--")),
+        r"TF (Ghobadi-Far Z(f) [0.9, 11] mHz)" + tag(residual_lgdTF_freq):
+            (s["res_LGD_tf_freq"], dict(color="tab:blue", lw=1.1)),
+        r"TF (Ghobadi-Far Z(f) extended)" + tag(residual_lgdTF):
+            (s["res_LGD_tf"], dict(color="tab:blue", lw=1.1)),
     }
     errors = {
-        r"$\epsilon_{\rm TF-fit}$" + tag(error_TF):
-            (s_TF, dict(color="tab:blue", lw=1.1, ls="-")),
+        r"$\epsilon_{\rm TF-GF}$" + tag(error_TF_freq):
+            (s_TF_freq, dict(color="tab:blue", lw=1.1, ls="-")),
         r"$\epsilon_{\rm TF-CW}$" + tag(error_newTF):
             (s_newTF, dict(color="tab:green", lw=1.0, ls="--")),
+        r"$\epsilon_{\rm TF-GF_{\rm ext}}$" + tag(error_TF):
+            (s_TF, dict(color="tab:green", lw=1.0, ls="--")),
         r"$\delta g_c$ (centrifugal)" + tag(residual_gc):
             (s_gc, dict(color="0.55", lw=1.0)),
     }

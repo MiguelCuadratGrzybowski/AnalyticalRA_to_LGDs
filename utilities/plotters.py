@@ -7,7 +7,7 @@ from utilities.Utility_functions_TimeFilt_new import transfer_function   # trans
 # =============================================================================
 # Plotting
 # =============================================================================
-def plot_and_save(stat, lon_c, lat_c, vmin, vmax, cmap, label, title, fname, outdir="plots"):
+def plot_and_save(stat, lon_c, lat_c, vmin, vmax, cmap, label, title, fname, outdir="plots", save=True, show=False):
     """stat has shape (nlon, nlat)."""
     Lon, Lat = np.meshgrid(lon_c, lat_c)
     fig = plt.figure(figsize=(12, 6))
@@ -19,9 +19,13 @@ def plot_and_save(stat, lon_c, lat_c, vmin, vmax, cmap, label, title, fname, out
     cbar = plt.colorbar(pc, orientation="horizontal", pad=0.05, fraction=0.05)
     cbar.set_label(label, fontsize=13)
     plt.title(title, fontsize=17)
-    outfile = os.path.join(outdir, fname)
-    plt.savefig(outfile, dpi=200, bbox_inches="tight")
-    plt.close(fig)
+    if save:
+        outfile = os.path.join(outdir, fname)
+        plt.savefig(outfile, dpi=200, bbox_inches="tight")
+    if show:
+        plt.show()
+    if not show:
+        plt.close(fig)
     print(f"Saved {outfile}")
 
 def plot_spectra(signals, errors, fs, nperseg, f_cpr, title, fname, outdir="plots"):
