@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdb73121-d78a-4dad-9b76-ade65e0004d7" name="Changes" comment="added synthesis, and inter-comparison with real data.">
-      <change afterPath="$PROJECT_DIR$/AnalyseResults.py" afterDir="false" />
+    <list default="true" id="cdb73121-d78a-4dad-9b76-ade65e0004d7" name="Changes" comment="added with real data and validation of method!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Apply_to_real_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Apply_to_real_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/plotters.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/plotters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnalyseResults.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnalyseResults.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +54,7 @@
     "Python.AnalyseResults.executor": "Run",
     "Python.AnalyticalPowerLaw.executor": "Run",
     "Python.ApplyTF_RA_LGD (1).executor": "Run",
+    "Python.ApplyTF_RA_LGD.executor": "Run",
     "Python.Apply_to_real_data.executor": "Run",
     "Python.PlotAdmittance.executor": "Run",
     "Python.lgd_synthesis.executor": "Run",
@@ -233,7 +232,7 @@
       <workItem from="1795121638029" duration="4470000" />
       <workItem from="1795131892920" duration="10319000" />
       <workItem from="1795517463220" duration="21043000" />
-      <workItem from="1795797370109" duration="7244000" />
+      <workItem from="1795797370109" duration="7791000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -307,7 +306,15 @@
       <option name="project" value="LOCAL" />
       <updated>1795600788414</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="added with real data and validation of method!">
+      <option name="closed" value="true" />
+      <created>1795864988655</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1795864988657</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,7 +327,8 @@
     <MESSAGE value="5th commit" />
     <MESSAGE value="6th commit" />
     <MESSAGE value="added synthesis, and inter-comparison with real data." />
-    <option name="LAST_COMMIT_MESSAGE" value="added synthesis, and inter-comparison with real data." />
+    <MESSAGE value="added with real data and validation of method!" />
+    <option name="LAST_COMMIT_MESSAGE" value="added with real data and validation of method!" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$ApplyTF_RA_LGD__1_.coverage" NAME="ApplyTF_RA_LGD (1) Coverage Results" MODIFIED="1795167533815" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -330,9 +338,10 @@
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$lgd_synthesis.coverage" NAME="lgd_synthesis Coverage Results" MODIFIED="1795548308649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$make_circular_orbit.coverage" NAME="make_circular_orbit Coverage Results" MODIFIED="1795521839116" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/orbit_related" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$AnalyticalPowerLaw.coverage" NAME="AnalyticalPowerLaw Coverage Results" MODIFIED="1795079704332" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$AnalyseResults.coverage" NAME="AnalyseResults Coverage Results" MODIFIED="1795864068953" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$AnalyseResults.coverage" NAME="AnalyseResults Coverage Results" MODIFIED="1795865201372" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$Apply_to_real_data.coverage" NAME="Apply_to_real_data Coverage Results" MODIFIED="1795803641795" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$plot.coverage" NAME="plot Coverage Results" MODIFIED="1795521945422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
+    <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$ApplyTF_RA_LGD.coverage" NAME="ApplyTF_RA_LGD Coverage Results" MODIFIED="1795864852700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$Doctests_in_lgd_synthesis.coverage" NAME="Doctests in lgd_synthesis Coverage Results" MODIFIED="1795518172642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LGDsynthesis" />
     <SUITE FILE_PATH="coverage/AnalyticalRA_to_LGDs$synthResLGDsaver.coverage" NAME="synthResLGDsaver Coverage Results" MODIFIED="1795016685970" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

@@ -11,16 +11,11 @@ Generic plotting of a NetCDF file, dispatched on each variable's dimensions.
 Metrics: mean, median, std, rms, min, max, absmean (mean |x|), p05, p95
 """
 from pathlib import Path
-
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
 
-try:
-    import cartopy.crs as ccrs
-    HAS_CARTOPY = True
-except ImportError:
-    HAS_CARTOPY = False
 
 
 # ---------------------------------------------------------------------------
@@ -102,22 +97,14 @@ def _limits(name, metric, data, field_meta, symmetric=True):
 def _label(name, da, field_meta):
     lab = field_meta[name][2] if name in field_meta else da.attrs.get("long_name", name)
     units = da.attrs.get("units")
-    return lab, (f" [{units}]" if units else "")
+    return lab, (rf" [$\rm {units}$]" if units else "")
 
 
 def _new_map_ax(fig, spec, use_cartopy):
-    if HAS_CARTOPY and use_cartopy:
-        ax = fig.add_subplot(spec, projection=ccrs.Robinson())
-        ax.set_global()
-        ax.coastlines(lw=0.4)
-        return ax, dict(transform=ccrs.PlateCarree())
-    ax = fig.add_subplot(spec)
-    ax.set_xlim(-180, 180)
-    ax.set_ylim(-90, 90)
-    ax.set_aspect("equal")
-    ax.set_xlabel("Lon [deg]")
-    ax.set_ylabel("Lat [deg]")
-    return ax, {}
+    ax = fig.add_subplot(spec, projection=ccrs.Robinson())
+    ax.set_global()
+    ax.coastlines(lw=0.4)
+    return ax, dict(transform=ccrs.PlateCarree())
 
 
 def _wrap_lon(da, lon):
